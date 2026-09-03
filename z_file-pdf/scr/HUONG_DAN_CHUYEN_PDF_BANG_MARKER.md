@@ -1,8 +1,8 @@
-# Huong dan chuyen PDF bang Marker
+# Hướng dẫn chuyển PDF bằng Marker
 
-## 1. Cau truc thu muc
+## 1. Cấu trúc thư mục
 
-Dat file PDF can chuyen vao thu muc `scr`:
+Đặt file PDF cần chuyển vào thư mục `scr`:
 
 ```text
 marker/
@@ -10,62 +10,61 @@ marker/
     ├── scr/
     │   ├── HUONG_DAN_CHUYEN_PDF_BANG_MARKER.md
     │   └── tai-lieu.pdf
-    └── output/
+    └── Output/
 ```
 
-## 2. Lenh chuyen mot file
+## 2. Lệnh chuyển một file
 
-Mo PowerShell tai thu muc goc `marker`, sau do chay:
+Mở PowerShell tại thư mục gốc `marker`, sau đó chạy:
 
 ```powershell
-uv run marker_single "z_file-pdf\scr\tai-lieu.pdf" --output_dir "z_file-pdf\output" --output_format markdown
+uv run marker_single "z_file-pdf\scr\tai-lieu.pdf" --output_dir "z_file-pdf\Output" --output_format markdown
 ```
 
-Thay `tai-lieu.pdf` bang ten file that. Vi du:
+Thay `tai-lieu.pdf` bằng tên file thật. Ví dụ:
 
 ```powershell
-uv run marker_single "z_file-pdf\scr\nckh-c1.pdf" --output_dir "z_file-pdf\output" --output_format markdown
+uv run marker_single "z_file-pdf\scr\nckh-c1.pdf" --output_dir "z_file-pdf\Output" --output_format markdown
 ```
 
-## 3. Vi tri ket qua
+## 3. Vị trí kết quả
 
-Marker se tao:
+Marker sẽ tạo:
 
 ```text
-z_file-pdf/output/tai-lieu/tai-lieu.md
-z_file-pdf/output/tai-lieu/tai-lieu_meta.json
+z_file-pdf/Output/tai-lieu.md
 ```
 
-File `.md` la van ban da chuyen doi. File `_meta.json` chua thong tin metadata va thong ke trang.
+File `.md` là văn bản đã chuyển đổi. File `_meta.json` chứa thông tin metadata và thống kê trang.
 
-## 4. Lan chay dau tien
+## 4. Lần chạy đầu tiên
 
-Lan dau chay `uv run`, UV se tu dong:
+Lần đầu chạy `uv run`, UV sẽ tự động:
 
-1. Tao moi truong `.venv` cho repo.
-2. Cai cac goi phu thuoc cua Marker.
-3. Tai model OCR/Layout cua Surya.
-4. Chay chuyen doi PDF.
+1. Tạo môi trường `.venv` cho repo.
+2. Cài các gói phụ thuộc của Marker.
+3. Tải model OCR/Layout của Surya.
+4. Chạy chuyển đổi PDF.
 
-Buoc nay co the mat nhieu phut va can Internet. Cac lan sau se nhanh hon vi goi va model da duoc cache.
+Bước này có thể mất nhiều phút và cần Internet. Các lần sau sẽ nhanh hơn vì gói và model đã được cache.
 
-## 5. Luu y quan trong
+## 5. Lưu ý quan trọng
 
-- Chi chay mot lenh Marker tai mot thoi diem; khong mo hai lenh cung xu ly mot file.
-- Khong can chay lai neu lenh da tra ve `returncode=0` va da co file `.md`.
-- Neu lan chay bi dung dot ngot va lan sau bao loi `ocr_error_server.lock`, dong cac tien trinh Marker/Surya con lai roi chay lai mot lan duy nhat.
-- Khong dung `--disable_ocr` neu PDF la ban scan hoac can giu bo cuc; tuy chon nay chi phu hop khi PDF da co lop text tot.
+- Chỉ chạy một lệnh Marker tại một thời điểm; không mở hai lệnh cùng xử lý một file.
+- Không cần chạy lại nếu lệnh đã trả về `returncode=0` và đã có file `.md`.
+- Nếu lần chạy bị dừng đột ngột và lần sau báo lỗi `ocr_error_server.lock`, đóng các tiến trình Marker/Surya còn lại rồi chạy lại một lần duy nhất.
+- Không dùng `--disable_ocr` nếu PDF là bản scan hoặc cần giữ bố cục; tùy chọn này chỉ phù hợp khi PDF đã có lớp text tốt.
 
-## 6. Kiem tra nhanh ket qua
+## 6. Kiểm tra nhanh kết quả
 
 ```powershell
-Get-ChildItem "z_file-pdf\output" -Recurse -File
-Get-Content "z_file-pdf\output\tai-lieu\tai-lieu.md" -TotalCount 30
+Get-ChildItem "z_file-pdf\Output" -File
+Get-Content "z_file-pdf\Output\tai-lieu.md" -TotalCount 30
 ```
 
-## 7. Tom tat cach da thuc hien voi `nckh-c1.pdf`
+## 7. Tóm tắt cách đã thực hiện với `nckh-c1.pdf`
 
-- Tim file dau vao trong `z_file-pdf/scr`.
-- Dung entry point co san `marker_single` cua repo Marker.
-- Dat dau ra vao `z_file-pdf/output` va dinh dang `markdown`.
-- Marker da tao Markdown 8,090 byte va metadata xac nhan 4 trang.
+- Tìm file đầu vào trong `z_file-pdf/scr`.
+- Dùng entry point có sẵn `marker_single` của repo Marker.
+- Đặt đầu ra vào `z_file-pdf/Output` và định dạng `markdown`.
+- Marker đã tạo Markdown 8.090 byte và metadata xác nhận 4 trang.
